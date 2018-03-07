@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="../standard.css" type="text/css">
+    <title>Comp 431: Project</title>
+    <base target="_top"/>
+  </head>
+  <body>
+    <h3>Part 1</h3>
+    <h4>Model</h4>
+    <p>
+      You are to make a model type for a collection of users.
+    </p>
+    <p class="top">
+      A <code>User</code> document should have the following fields:
+    </p>
+    <ul class="end">
+      <li><code>username</code> &mdash; a string; user's username (e.g., "gfoust")</li>
+      <li><code>firstname</code> &mdash; a string; user's first name (e.g., "Gabriel")</li>
+      <li><code>lastname</code> &mdash; a string; user's last name (e.g., "Foust")</li>
+      <li><code>email</code> &mdash; a string; user's email address (e.g., "gfoust@harding.edu")</li>
+      <li><code>role</code> &mdash; a string; either "admin", "teacher", or "student"</li>
+      <li><code>salt</code> &mdash; a string; salt used to encrypt user's password</li>
+      <li><code>password</code> &mdash; a string; user's <em>encrypted</em> password</li>
+    </ul>
+    <p class="top">
+      A <code>Class</code> document should have the following fields:
+    </p>
+    <h4>Web Services</h4>
+    <p class="top">
+      You should define these services for interacting with <code>User</code>
+      documents:
+    </p>
+    <ul class="end">
+      <li><code>GET /api/users/</code> &mdash; return a list of all users</li>
+      <li><code>GET /api/users/:username</code> &mdash; get a specific user</li>
+      <li><code>USER /api/users/</code> &mdash; create a new user</li>
+      <li><code>PUT /api/users/:username</code> &mdash; update a specific
+        user</li>
+      <li><code>DELETE /api/users/:username</code> &mdash; delete a specific user</li>
+    </ul>
+    <p class="top">Rules for user web services
+      <ol class="end">
+        <li>
+          When creating or updating, do not allow the client to specify salt;
+          instead generate randomly upon creation and never change
+        </li>
+        <li>
+          Client will send password unencrypted; encrypt before storing in the
+          database
+        </li>
+        <li>
+          Web services should never return the salt or password of a user
+        </li>
+      </ol>
+    </p>
+    <!-- h3>Authentication/Authorization</h3>
+    <ol class="spaced">
+      <li>All web services should require HTTP authentication</li>
+      <li>Verify username/password against the User database</li>
+      <li>Manually add the following <code>User</code> document to your
+        database
+        <ul>
+          <li><code>username=admin</code></li>
+          <li><code>firstname=Admin</code></li>
+          <li><code>lastname=User</code></li>
+          <li><code>email=</code><var>Your email</var></li>
+          <li><code>password=likeaboss</code> (encrypted)</li>
+        </ul>
+      </li>
+      <li>
+        Only the admin user should be authorized to use
+        the <code>/api/users/</code> services
+      </li>
+      <li>
+        Anyone may GET and POST to <code>/api/posts</code>
+      </li>
+      <li>
+        Restrict PUT and DELETE for <code>/api/posts/</code> to the admin user
+        and the article's author
+      </li>
+    </ol-->
+  </body>
+</html>
