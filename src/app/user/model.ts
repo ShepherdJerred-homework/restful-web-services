@@ -64,4 +64,4 @@ let UserSchema: mongoose.Schema = new mongoose.Schema({
   }
 });
 
-export let AlbumModel: mongoose.Model<UserDocument> = mongoose.model<UserDocument>('User', UserSchema);
+export let UserModel: mongoose.Model<UserDocument> = mongoose.model<UserDocument>('User', UserSchema);
