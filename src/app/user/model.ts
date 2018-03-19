@@ -62,6 +62,19 @@ let UserSchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     required: true
   }
+}, {
+  toJSON: {
+    getters: false,
+    virtuals: false,
+    transform: (doc, obj, options) => {
+      obj.id = obj._id;
+      delete obj._id;
+      delete obj.__v;
+      delete obj.password;
+      delete obj.salt;
+      return obj;
+    }
+  }
 });
 
 export let UserModel: mongoose.Model<UserDocument> = mongoose.model<UserDocument>('User', UserSchema);
