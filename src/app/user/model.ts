@@ -1,4 +1,4 @@
-import './mongoose';
+import '../mongoose';
 import * as mongoose from 'mongoose';
 
 export interface User {
