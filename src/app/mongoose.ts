@@ -1,4 +1,10 @@
 import * as mongoose from 'mongoose';
 import * as config from '../config';
 
-mongoose.connect(config.mongodbUrl);
+(async function connect () {
+  try {
+    await mongoose.connect(config.mongodbUrl);
+  } catch (err) {
+    console.log(err);
+  }
+})();
