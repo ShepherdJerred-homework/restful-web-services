@@ -33,19 +33,22 @@ export async function getUser (req: express.Request, res: express.Response, next
 }
 
 export async function addUser (req: express.Request, res: express.Response, next: express.NextFunction) {
-  let salt = crypto.randomBytes(64);
-  let encryptedBuffer = await pbkdf2(req.body.password, salt, 10000, 256, 'sha512');
-  let encryptedPassword = encryptedBuffer.toString('base64');
-
-  let user: model.UserDocument = new model.UserModel({
-    username: req.body.username,
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    email: req.body.email,
-    salt: salt,
-    password: encryptedPassword
-  });
   try {
+    let salt = crypto.randomBytes(64);
+    let saltBase64 = salt.toString('base64');
+    let passwordHash = await pbkdf2(req.body.password, salt, 10000, 256, 'sha512');
+    let passwordHashBase64 = passwordHash.toString('base64');
+
+    let user: model.UserDocument = new model.UserModel({
+      username: req.body.username,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      role: req.body.role,
+      salt: saltBase64,
+      password: passwordHashBase64
+    });
+
     user = await user.save();
     res.send(user);
   } catch (err) {
