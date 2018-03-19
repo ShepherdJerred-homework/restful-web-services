@@ -1,5 +1,5 @@
 import * as express from 'express';
-import * as model from './model';
+// import * as model from './model';
 
 export async function getStudentsInClass (req: express.Request, res: express.Response, next: express.NextFunction) {
 }
