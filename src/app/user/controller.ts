@@ -7,14 +7,17 @@ import * as basicAuth from 'basic-auth';
 
 let pbkdf2 = util.promisify(crypto.pbkdf2);
 
-
 export function restrictToRole (roles: model.Role[]) {
   return function (req: express.Request, res: express.Response, next: express.NextFunction) {
     if (roles.indexOf(res.locals.login.role) > -1) {
       next();
     } else {
       res.status(403);
-      res.json({ message: 'You are not allowed to perform this action', currentRole: res.locals.login.role, requiredRole: roles });
+      res.json({
+        message: 'You are not allowed to perform this action',
+        currentRole: res.locals.login.role,
+        requiredRole: roles
+      });
     }
   };
 }
@@ -23,12 +26,17 @@ export async function authenticate (req: express.Request, res: express.Response,
   let user = basicAuth(req);
 
   if (user && user.name && user.pass) {
-    let targetUser: model.User | null = await getUserByUsername(user.name);
+    try {
+      let targetUser: model.User | null = await getUserByUsername(user.name);
 
-    if (targetUser && base64ToBuffer(targetUser.password).equals(await hashPassword(user.pass, base64ToBuffer(targetUser.salt)))) {
-      res.locals.login = targetUser;
-      next();
-      return;
+      if (targetUser && base64ToBuffer(targetUser.password).equals(await hashPassword(user.pass, base64ToBuffer(targetUser.salt)))) {
+        res.locals.login = targetUser;
+        next();
+        return;
+      }
+    } catch (err) {
+      res.status(500);
+      res.json({ message: err });
     }
   }
 
@@ -129,14 +137,24 @@ export async function updateUser (req: express.Request, res: express.Response, n
 
   let password = req.body.password;
   if (password) {
-    let salt = generateSalt();
-    let hashedPassword = await hashPassword(password, salt);
-    user.salt = bufferToBase64(salt);
-    user.password = bufferToBase64(hashedPassword);
+    try {
+      let salt = generateSalt();
+      let hashedPassword = await hashPassword(password, salt);
+      user.salt = bufferToBase64(salt);
+      user.password = bufferToBase64(hashedPassword);
+    } catch (err) {
+      res.status(500);
+      res.json({ message: err });
+    }
   }
 
-  user = await user.save();
-  res.json(user);
+  try {
+    user = await user.save();
+    res.json(user);
+  } catch (err) {
+    res.status(500);
+    res.json({ message: err });
+  }
 }
 
 export async function deleteUser (req: express.Request, res: express.Response, next: express.NextFunction) {
