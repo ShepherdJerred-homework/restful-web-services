@@ -49,25 +49,25 @@ let ClassSchema: mongoose.Schema = new mongoose.Schema({
       // TODO check for teacher role
       validator: (id: mongoose.Schema.Types.ObjectId) =>
         user.UserModel.findById(id).then(user => user !== null) as any,
-      message: 'User ${VALUE} does not exist'
+      message: 'Teacher {VALUE} does not exist'
     }
   },
-  students: {
-    type: [mongoose.Schema.Types.ObjectId],
+  students: [{
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User',
     validate: {
       // TODO check for student role
       validator: (id: mongoose.Schema.Types.ObjectId) =>
         user.UserModel.findById(id).then(user => user !== null) as any,
-      message: 'User ${VALUE} does not exist'
+      message: 'Student {VALUE} does not exist'
     }
-  },
-  assignments: {
-    type: [mongoose.Schema.Types.ObjectId],
+  }],
+  assignments: [{
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'Assignment'
-  }
+  }]
 }, {
   toJSON: {
     getters: false,
