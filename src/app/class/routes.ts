@@ -9,9 +9,9 @@ router.use('/', userController.authenticate);
 
 router.param('classid', controller.getClassFromParameter);
 
-router.get('/', controller.getClasses);
+router.get('/', userController.restrictToRole([model.Role.student, model.Role.teacher, model.Role.admin]), controller.getClasses);
 
-router.get('/:classid', controller.getClass);
+router.get('/:classid', userController.restrictToRole([model.Role.student, model.Role.teacher, model.Role.admin]), controller.getClass);
 
 router.post('/', userController.restrictToRole([model.Role.teacher, model.Role.admin]), controller.addClass);
 
