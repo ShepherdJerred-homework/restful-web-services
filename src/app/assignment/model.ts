@@ -14,7 +14,7 @@ export interface AssignmentDocument extends Assignment, mongoose.Document {
 
 let AssignmentSchema: mongoose.Schema = new mongoose.Schema({
   class: {
-    type: classs.ClassModel,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'Class'
   },

@@ -42,7 +42,7 @@ let ClassSchema: mongoose.Schema = new mongoose.Schema({
     maxlength: 200
   },
   teacher: {
-    type: user.UserModel,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User',
     validate: {
@@ -53,7 +53,7 @@ let ClassSchema: mongoose.Schema = new mongoose.Schema({
     }
   },
   students: {
-    type: [user.UserModel],
+    type: [mongoose.Schema.Types.ObjectId],
     required: true,
     ref: 'User',
     validate: {
@@ -64,7 +64,7 @@ let ClassSchema: mongoose.Schema = new mongoose.Schema({
     }
   },
   assignments: {
-    type: [assignment.AssignmentModel],
+    type: [mongoose.Schema.Types.ObjectId],
     required: true,
     ref: 'Assignment'
   }
