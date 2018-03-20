@@ -68,6 +68,19 @@ let ClassSchema: mongoose.Schema = new mongoose.Schema({
     required: true,
     ref: 'Assignment'
   }
+}, {
+  toJSON: {
+    getters: false,
+    virtuals: false,
+    transform: (doc, obj, options) => {
+      obj.id = obj._id;
+      delete obj._id;
+      delete obj.__v;
+      delete obj.students;
+      delete obj.assignments;
+      return obj;
+    }
+  }
 });
 
 export let ClassModel: mongoose.Model<ClassDocument> = mongoose.model<ClassDocument>('Class', ClassSchema);
