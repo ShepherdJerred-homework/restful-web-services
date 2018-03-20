@@ -12,9 +12,9 @@ export interface User {
 }
 
 export enum Role {
-  'admin',
-  'teacher',
-  'student'
+  admin = 'admin',
+  teacher = 'teacher',
+  student = 'student'
 }
 
 export interface UserDocument extends User, mongoose.Document {

@@ -7,9 +7,10 @@ import * as basicAuth from 'basic-auth';
 
 let pbkdf2 = util.promisify(crypto.pbkdf2);
 
-export function restrictToRole (role: model.Role[]) {
+export function restrictToRole (roles: model.Role[]) {
   return function (req: express.Request, res: express.Response, next: express.NextFunction) {
-    if (role.indexOf(res.locals.login.role) > -1) {
+    console.log(roles);
+    if (roles.indexOf(res.locals.login.role) > -1) {
       next();
     } else {
       res.status(403);
