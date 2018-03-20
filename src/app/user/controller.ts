@@ -7,22 +7,15 @@ import * as basicAuth from 'basic-auth';
 
 let pbkdf2 = util.promisify(crypto.pbkdf2);
 
-export function checkUserIsTeacher (req: express.Request, res: express.Response, next: express.NextFunction) {
-  if (res.locals.login.role === 'teacher') {
-    next();
-  } else {
-    res.status(403);
-    res.json({ error: 'You are not allowed to perform this action' });
-  }
-}
-
-export function checkUserIsAdmin (req: express.Request, res: express.Response, next: express.NextFunction) {
-  if (res.locals.login.role === 'admin') {
-    next();
-  } else {
-    res.status(403);
-    res.json({ error: 'You are not allowed to perform this action' });
-  }
+export function restrictToRole (role: model.Role[]) {
+  return function (req: express.Request, res: express.Response, next: express.NextFunction) {
+    if (role.indexOf(res.locals.login.role) > -1) {
+      next();
+    } else {
+      res.status(403);
+      res.json({ message: 'You are not allowed to perform this action' });
+    }
+  };
 }
 
 export async function authenticate (req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -40,7 +33,7 @@ export async function authenticate (req: express.Request, res: express.Response,
 
   res.status(401);
   res.setHeader('WWW-Authenticate', 'Basic realm="My Realm"');
-  res.json({ error: 'You must be logged in to view this resource' });
+  res.json({ message: 'You must be logged in to view this resource' });
 }
 
 export async function getUserFromParameter (req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -59,11 +52,11 @@ export async function getUserFromParameter (req: express.Request, res: express.R
       next();
     } else {
       res.status(404);
-      res.json({ error: 'User not found' });
+      res.json({ message: 'User not found' });
     }
   } catch (err) {
     res.status(500);
-    res.json({ error: err });
+    res.json({ message: err });
   }
 }
 
@@ -73,7 +66,7 @@ export async function getUsers (req: express.Request, res: express.Response, nex
     res.json(users);
   } catch (err) {
     res.status(500);
-    res.json({ error: err });
+    res.json({ message: err });
   }
 }
 
@@ -101,7 +94,7 @@ export async function addUser (req: express.Request, res: express.Response, next
     res.json(user);
   } catch (err) {
     res.status(500);
-    res.json({ error: err });
+    res.json({ message: err });
   }
 }
 
@@ -152,7 +145,7 @@ export async function deleteUser (req: express.Request, res: express.Response, n
     res.json(user);
   } catch (err) {
     res.status(500);
-    res.json({ error: err });
+    res.json({ message: err });
   }
 }
 
