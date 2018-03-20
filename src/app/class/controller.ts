@@ -75,7 +75,44 @@ export async function addClass (req: express.Request, res: express.Response, nex
   }
 }
 
-export function updateClass (req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function updateClass (req: express.Request, res: express.Response, next: express.NextFunction) {
+  let classs = res.locals.class;
+
+  let department = req.body.department;
+  if (department) {
+    classs.department = department;
+  }
+
+  let classNumber = req.body.number;
+  if (classNumber) {
+    classs.number = classNumber;
+  }
+
+  let title = req.body.title;
+  if (title) {
+    classs.title = title;
+  }
+
+  let teacher = req.body.teacher;
+  if (teacher) {
+    let teacher = req.body.teacher;
+    if (!mongoose.Types.ObjectId.isValid(teacher)) {
+      try {
+        await userModel.UserModel.findOne({ 'username': teacher });
+      } catch (err) {
+        res.status(400);
+        res.json({ message: 'Teacher not found' });
+      }
+    }
+    classs.teacher = teacher;
+  }
+
+  try {
+    await classs.save();
+  } catch (err) {
+    res.status(500);
+    res.json({ message: err });
+  }
 }
 
 export function deleteClass (req: express.Request, res: express.Response, next: express.NextFunction) {
