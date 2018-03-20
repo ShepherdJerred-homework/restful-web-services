@@ -4,12 +4,16 @@ import * as model from './model';
 
 export const router: express.Router = express.Router();
 
-router.get('/', controller.authenticate, controller.restrictToRole([model.Role.teacher, model.Role.admin]), controller.getUsers);
+router.use('/', controller.authenticate);
 
-router.get('/:userid', controller.authenticate, controller.restrictToRole([model.Role.teacher, model.Role.admin]), controller.getUserFromParameter, controller.getUser);
+router.param('userid', controller.getUserFromParameter);
 
-router.post('/', controller.authenticate, controller.restrictToRole([model.Role.admin]), controller.addUser);
+router.get('/', controller.restrictToRole([model.Role.teacher, model.Role.admin]), controller.getUsers);
 
-router.put('/:userid', controller.authenticate, controller.restrictToRole([model.Role.admin]), controller.getUserFromParameter, controller.updateUser);
+router.get('/:userid', controller.restrictToRole([model.Role.teacher, model.Role.admin]), controller.getUser);
 
-router.delete('/:userid', controller.authenticate, controller.restrictToRole([model.Role.admin]), controller.getUserFromParameter, controller.deleteUser);
+router.post('/', controller.restrictToRole([model.Role.admin]), controller.addUser);
+
+router.put('/:userid', controller.restrictToRole([model.Role.admin]), controller.updateUser);
+
+router.delete('/:userid', controller.restrictToRole([model.Role.admin]), controller.deleteUser);

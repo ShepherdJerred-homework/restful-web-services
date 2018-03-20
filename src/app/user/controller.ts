@@ -9,12 +9,11 @@ let pbkdf2 = util.promisify(crypto.pbkdf2);
 
 export function restrictToRole (roles: model.Role[]) {
   return function (req: express.Request, res: express.Response, next: express.NextFunction) {
-    console.log(roles);
     if (roles.indexOf(res.locals.login.role) > -1) {
       next();
     } else {
       res.status(403);
-      res.json({ message: 'You are not allowed to perform this action' });
+      res.json({ message: 'You are not allowed to perform this action', currentRole: res.locals.login.role, requiredRole: roles });
     }
   };
 }
@@ -37,15 +36,15 @@ export async function authenticate (req: express.Request, res: express.Response,
   res.json({ message: 'You must be logged in to view this resource' });
 }
 
-export async function getUserFromParameter (req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function getUserFromParameter (req: express.Request, res: express.Response, next: express.NextFunction, userid: string) {
   let user: model.User | null;
 
   try {
     // a valid username may be interpreted as a object id
-    if (mongoose.Types.ObjectId.isValid(req.params.userid)) {
-      user = await getUserById(req.params.userid);
+    if (mongoose.Types.ObjectId.isValid(userid)) {
+      user = await getUserById(userid);
     } else {
-      user = await getUserByUsername(req.params.userid);
+      user = await getUserByUsername(userid);
     }
 
     if (user) {
