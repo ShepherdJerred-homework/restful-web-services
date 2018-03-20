@@ -31,9 +31,9 @@ function getClassById (id: string) {
 }
 
 function getClassByDepartmentAndNumber (departmentAndNumber: string) {
-  let department: string = departmentAndNumber.substring(0, 3);
-  let courseNumber: number = Number.parseInt(departmentAndNumber.substring(4, 6), 10);
-  return model.ClassModel.findOne({ 'department': department.toUpperCase(), 'number': courseNumber });
+  let department: string = departmentAndNumber.substring(0, 4).toUpperCase();
+  let courseNumber: number = Number.parseInt(departmentAndNumber.substring(4, 7), 10);
+  return model.ClassModel.findOne({ 'department': department, 'number': courseNumber });
 }
 
 export async function getClasses (req: express.Request, res: express.Response, next: express.NextFunction) {
