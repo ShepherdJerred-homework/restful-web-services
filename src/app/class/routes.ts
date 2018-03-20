@@ -15,6 +15,6 @@ router.get('/:classid', userController.restrictToRole([model.Role.student, model
 
 router.post('/', userController.restrictToRole([model.Role.teacher, model.Role.admin]), controller.addClass);
 
-router.post('/:classid', userController.restrictToRole([model.Role.teacher, model.Role.admin]), controller.updateClass);
+router.put('/:classid', userController.restrictToRole([model.Role.teacher, model.Role.admin]), controller.updateClass);
 
 router.delete('/:classid', userController.restrictToRole([model.Role.teacher, model.Role.admin]), controller.deleteClass);
