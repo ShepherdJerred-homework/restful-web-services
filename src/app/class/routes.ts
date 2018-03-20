@@ -3,8 +3,12 @@ import * as controller from './controller';
 
 export const router: express.Router = express.Router();
 
-router.get('/:classid', controller.getStudentsInClass);
+router.get('/', controller.getClasses);
 
-router.put('/:classid/:userid', controller.addStudentToClass);
+router.get('/:classid', controller.getClass);
 
-router.delete('/:classid/:userid', controller.removeStudentFromClass);
+router.post('/', controller.addClass);
+
+router.post('/:classid', controller.updateClass);
+
+router.delete('/:classid', controller.deleteClass);
