@@ -1,6 +1,10 @@
 import * as express from 'express';
 // import * as model from './model';
 
+export function getAssignmentFromParameter(req: express.Request, res: express.Response, next: express.NextFunction, assignnum: string) {
+
+}
+
 export async function getAssignmentsForClass (req: express.Request, res: express.Response, next: express.NextFunction) {
 }
 
