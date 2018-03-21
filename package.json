@@ -2,7 +2,7 @@
   "name": "restful-web-services",
   "version": "1.0.0",
   "description": "Example of RESTful web services",
-  "main": "lib/app/index.js",
+  "main": "lib/app/server.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -w -p tsconfig.json",
