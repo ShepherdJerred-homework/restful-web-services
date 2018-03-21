@@ -46,9 +46,8 @@ let ClassSchema: mongoose.Schema = new mongoose.Schema({
     required: true,
     ref: 'User',
     validate: {
-      // TODO check for teacher role
       validator: (id: mongoose.Schema.Types.ObjectId) =>
-        user.UserModel.findById(id).then(user => user !== null) as any,
+        user.UserModel.findById(id).then(user => user !== null && user.role === 'teacher') as any,
       message: 'Teacher {VALUE} does not exist'
     }
   },
@@ -57,9 +56,8 @@ let ClassSchema: mongoose.Schema = new mongoose.Schema({
     required: true,
     ref: 'User',
     validate: {
-      // TODO check for student role
       validator: (id: mongoose.Schema.Types.ObjectId) =>
-        user.UserModel.findById(id).then(user => user !== null) as any,
+        user.UserModel.findById(id).then(user => user !== null && user.role === 'student') as any,
       message: 'Student {VALUE} does not exist'
     }
   }],
