@@ -81,8 +81,19 @@ export async function updateAssignment (req: express.Request, res: express.Respo
   try {
     assignment = await assignment.save();
     if (classId) {
-      await classs.update({ _id: classs._id }, { $pull: { assignments: assignment } });
-      await classs.update({ _id: classId._id }, { $push: { assignments: assignment } });
+      try {
+        let newClass = await classModel.ClassModel.findOne({ _id: classId });
+        if (newClass) {
+          await classs.update({ $pull: { 'assignments': assignment._id } });
+          await newClass.update({ $push: { 'assignments': assignment._id } });
+        } else {
+          res.status(404);
+          res.json({ message: 'Class not found' });
+        }
+      } catch (err) {
+        res.status(500);
+        res.json({ message: 'Assignment not found' });
+      }
     }
     res.json(assignment);
   } catch (err) {

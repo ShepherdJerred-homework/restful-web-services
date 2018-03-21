@@ -10,7 +10,7 @@ router.use('/', userController.authenticate);
 
 router.param('classid', classController.getClassFromParameter);
 
-router.param('assignnum', controller.getAssignmentFromParameter)
+router.param('assignnum', controller.getAssignmentFromParameter);
 
 router.get('/:classid', userController.restrictToRole([userModel.Role.student, userModel.Role.teacher, userModel.Role.admin]), controller.getAssignmentsForClass);
 
