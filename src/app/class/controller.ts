@@ -65,7 +65,9 @@ export async function addClass (req: express.Request, res: express.Response, nex
       department: req.body.department,
       number: req.body.number,
       title: req.body.title,
-      teacher: teacher
+      teacher: teacher,
+      students: [],
+      assignments: []
     });
     classs = await classs.save();
     res.json(classs);
