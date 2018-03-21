@@ -3,81 +3,379 @@
     <link rel="stylesheet" href="../standard.css" type="text/css">
     <title>Comp 431: Project</title>
     <base target="_top"/>
+    <style>
+      pre { margin: 0 }
+    </style>
   </head>
   <body>
-    <h3>Part 1</h3>
-    <h4>Model</h4>
+    <h3>Model</h3>
     <p>
-      You are to make a model type for a collection of users.
+      You are to make a model type for a collection of users.  All fields are
+      required unless explicitly defined as optional or unless a default value
+      is provided.
     </p>
+    <h4>User</h4>
     <p class="top">
       A <code>User</code> document should have the following fields:
     </p>
     <ul class="end">
-      <li><code>username</code> &mdash; a string; user's username (e.g., "gfoust")</li>
-      <li><code>firstname</code> &mdash; a string; user's first name (e.g., "Gabriel")</li>
-      <li><code>lastname</code> &mdash; a string; user's last name (e.g., "Foust")</li>
-      <li><code>email</code> &mdash; a string; user's email address (e.g., "gfoust@harding.edu")</li>
-      <li><code>role</code> &mdash; a string; either "admin", "teacher", or "student"</li>
-      <li><code>salt</code> &mdash; a string; salt used to encrypt user's password</li>
-      <li><code>password</code> &mdash; a string; user's <em>encrypted</em> password</li>
+      <li>
+        <code>username</code> &mdash; user's username (e.g., "gfoust")
+        <ul>
+          <li>Must be a string</li>
+          <li>
+            Can contain alphanumeric characters; can contain underscores
+            (<code>_</code>) and hyphens (<code>-</code>) as long as they are
+            surrounded by alphanumeric characters; no other characters.
+            <pre>/^[a-zA-Z\d]([a-zA-Z\d]|[_-][a-zA-Z\d])+$/</pre>
+          </li>
+          <li>32 characters max</li>
+          <li>Must be unique; build a unique index</li>
+        </ul>
+      </li>
+      <li>
+        <code>firstname</code> &mdash; user's first name (e.g., "Gabriel")
+        <ul>
+          <li>Must be a string</li>
+          <li>No leading or trailing whitespace</li>
+          <li>100 characters max</li>
+        </ul>
+      </li>
+      <li>
+        <code>lastname</code> &mdash; user's last name (e.g., "Foust")
+        <ul>
+          <li>Must be a string</li>
+          <li>No leading or trailing whitespace</li>
+          <li>100 characters max</li>
+        </ul>
+      </li>
+      <li>
+        <code>email</code> &mdash; user's email address (e.g.,
+        "gabriel.foust@hotmail.com")
+        <ul>
+          <li>Must be a string</li>
+          <li>Must be an email address:
+            <ul>
+              <li>
+                An email address has the form <var>name</var>@<var>host</var>
+              </li>
+              <li>
+                The <var>name</var> consists of
+                one or more <dfn>words</dfn> separated by periods;
+                The <var>host</var> consists of two or more <dfn>words</dfn>
+                separated by periods
+              </li>
+              <li>
+                A <dfn>word</dfn> is a sequence of one or more letters,
+                digits, underscores (<code>_</code>), and hyphens
+                (<code>-</code>)
+              </li>
+            </ul>
+            <pre>/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/</pre>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <code>role</code> &mdash; user's role in the system
+        <ul>
+          <li>Must be a string</li>
+          <li>Must be either "admin", "teacher", or "student"</li>
+        </ul>
+      </li>
+      <li>
+        <code>salt</code> &mdash; salt used to encrypt user's password
+        <ul>
+          <li>Must be a string</li>
+          <li>Must be automatically generated as discussed in class</li>
+        </ul>
+      </li>
+      <li>
+        <code>password</code> &mdash; user's <em>encrypted</em> password
+        <ul>
+          <li>Must be a string</li>
+          <li>Must be encrypted using the salt as discussed in class</li>
+        </ul>
+      </li>
     </ul>
+    <h4>Class</h4>
     <p class="top">
       A <code>Class</code> document should have the following fields:
     </p>
-    <h4>Web Services</h4>
+    <ul class="end">
+      <li>
+        <code>department</code> &mdash; the department for the course (e.g.,
+        "COMP")
+        <ul>
+          <li>Must be a string</li>
+          <li>Must be exactly four characters</li>
+          <li>Should be converted to all uppercase</li>
+        </ul>
+      </li>
+      <li>
+        <code>number</code> &mdash; the number for the course (e.g., 431)
+        <ul>
+          <li>Must be an integer</li>
+          <li>Must have three digits (i.e., between 100&ndash;999)</li>
+        </ul>
+      </li>
+      <li>
+        <code>title</code> &mdash; the title of the course (e.g., "Web Dev
+        II")
+        <ul>
+          <li>Must be a string</li>
+          <li>No leading or trailing whitespace</li>
+          <li>200 characters max</li>
+        </ul>
+      </li>
+      <!-- li>
+        <code>semester</code> &mdash; the semester in which the class was held
+        <ul>
+          <li>Must be a string</li>
+          <li>
+            Must be either "spring", "intercession", "summer1", "summer2", or
+            "fall"
+          </li>
+        </ul>
+      </li>
+      <li>
+        <code>year</code> &mdash; the year in which the class was held
+        <ul>
+          <li>Must be an integer</li>
+          <li>Must be between 1960 and the current year</li>
+        </ul>
+      </li -->
+      <li>
+        <code>teacher</code> &mdash; the teacher for this class
+        <ul>
+          <li>Must be a document id</li>
+          <li>Must be an existing user with role <code>teacher</code></li>
+        </ul>
+      </li>
+      <li>
+        <code>students</code> &mdash; the students in this class
+        <ul>
+          <li>Must be an array of document ids</li>
+          <li>Must be an existing user with role <code>student</code></li>
+        </ul>
+      </li>
+      <li>
+        <code>assignments</code> &mdash; the assignments for this class; each
+        assignment should have the following fields:
+        <ul>
+          <li>
+            <code>class</code> &mdash; the class this assignment is for
+            <ul>
+              <li>Must be a document id</li>
+            </ul>
+          </li>
+          <li>
+            <code>title</code> &mdash; the title of the assignment
+            <ul>
+              <li>Must be string</li>
+              <li>No leading or trailing whitespace</li>
+              <li>200 characters max</li>
+            </ul>
+          </li>
+          <li>
+            <code>points</code> &mdash; the number of points the assignment is
+            worth
+            <ul>
+              <li>Must be a number</li>
+              <li>Must not be negative</li>
+              <li>Default to 100</li>
+            </ul>
+          </li>
+          <li>
+            <code>due</code> &mdash; the date the assignment is due
+            <ul>
+              <li>Must be a date</li>
+              <li>Default to two days from the current date</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h3>Authentication</h3>
+    <p>
+      You should use HTTP authentication for all web services.  Check the
+      username / password against the <code>User</code> collection.  Failure
+      to authenticate should result in a 401-challenge.  Lack of authorization
+      should result in a 403.
+    </p>
+    <p>
+      You should decouple all authentication and authorization from your
+      functions that perform database operations.  For example, you should
+      have one middleware funciton that checks authentication, a second that
+      performs authorization, and a third that performs a database lookup.  In
+      this way the database lookup is decoupled from any
+      authentication/authorization tasks.
+    </p>
+    <h3>Errors</h3>
+    <p>
+      All requests to a <code>/api/</code> url should result in a JSON
+      response, even if there was an error.  For 401, 403, and 404 errors,
+      create an object with a <code>message</code> property that describes the
+      error.
+    </p>
+    <p>
+      For errors that are the result of an exception, you may simply use the
+      exception object as your response.  However, you should use a 400 status
+      code for errors that are the client's fault (e.g., validation errors)
+      and a 500 status code for errors that are the server's fault (e.g.,
+      database failure).
+    </p>
+    <h3>Web Services</h3>
+    <p>
+      All web services should support partial updates; that is, if certain
+      fields are not specified in an update then they should keep their
+      current value.
+    </p>
+    <h4>User</h4>
     <p class="top">
       You should define these services for interacting with <code>User</code>
       documents:
     </p>
     <ul class="end">
       <li><code>GET /api/users/</code> &mdash; return a list of all users</li>
-      <li><code>GET /api/users/:username</code> &mdash; get a specific user</li>
-      <li><code>USER /api/users/</code> &mdash; create a new user</li>
-      <li><code>PUT /api/users/:username</code> &mdash; update a specific
+      <li><code>GET /api/users/:userid</code> &mdash; get a specific user</li>
+      <li><code>POST /api/users/</code> &mdash; create a new user</li>
+      <li><code>PUT /api/users/:userid</code> &mdash; update a specific
         user</li>
-      <li><code>DELETE /api/users/:username</code> &mdash; delete a specific user</li>
+      <li><code>DELETE /api/users/:userid</code> &mdash; delete a specific user</li>
     </ul>
-    <p class="top">Rules for user web services
-      <ol class="end">
-        <li>
-          When creating or updating, do not allow the client to specify salt;
-          instead generate randomly upon creation and never change
-        </li>
-        <li>
-          Client will send password unencrypted; encrypt before storing in the
-          database
-        </li>
-        <li>
-          Web services should never return the salt or password of a user
-        </li>
-      </ol>
+    <p class="top">Rules for user web services:</p>
+    <ol class="end">
+      <li>
+        The <code>:userid</code> parameter may be either a document id or a
+        username.
+      </li>
+      <li>
+        When creating or updating, do not allow the client to specify salt;
+        instead generate randomly upon creation and never change.
+      </li>
+      <li>
+        Client will send password unencrypted; encrypt before storing in the
+        database.
+      </li>
+      <li>
+        Web services should never return the salt or password of a user.
+      </li>
+      <li>
+        User must be <code>admin</code> to create / update / delete, and
+        must be either <code>admin</code> or <code>teacher</code> to read.
+      </li>
+    </ol>
+    <h4>Class</h4>
+    <p class="top">
+      You should define these services for interacting with <code>Class</code>
+      documents:
     </p>
-    <!-- h3>Authentication/Authorization</h3>
-    <ol class="spaced">
-      <li>All web services should require HTTP authentication</li>
-      <li>Verify username/password against the User database</li>
-      <li>Manually add the following <code>User</code> document to your
-        database
-        <ul>
-          <li><code>username=admin</code></li>
-          <li><code>firstname=Admin</code></li>
-          <li><code>lastname=User</code></li>
-          <li><code>email=</code><var>Your email</var></li>
-          <li><code>password=likeaboss</code> (encrypted)</li>
-        </ul>
+    <ul class="end">
+      <li><code>GET /api/classes/</code> &mdash; return a list of all classes</li>
+      <li><code>GET /api/classes/:classid</code> &mdash; get a specific class</li>
+      <li><code>POST /api/classes/</code> &mdash; create a new class</li>
+      <li><code>POST /api/classes/:classid</code> &mdash; update a specific
+        class</li>
+      <li><code>DELETE /api/classes/:classid</code> &mdash; delete a specific class</li>
+    </ul>
+    <p class="top">Rules for class web services:</p>
+    <ol class="end">
+      <li>
+        The <code>:classid</code> may be either a document id or a
+        department and number concatenation (e.g., "comp431").  Note that
+        department should be case insensitive (i.e., convert to uppercase
+        before you search for it).
       </li>
       <li>
-        Only the admin user should be authorized to use
-        the <code>/api/users/</code> services
+        These services should hide any students&mdash;you should not be able
+        to read or write students using these services.
       </li>
       <li>
-        Anyone may GET and POST to <code>/api/posts</code>
+        These services should hide any assignments&mdash;you should not be able to
+        read or write assignments using these services.
       </li>
       <li>
-        Restrict PUT and DELETE for <code>/api/posts/</code> to the admin user
-        and the article's author
+        When creating or updating, the <code>teacher</code> field may be
+        either a document id or a username.
       </li>
-    </ol-->
+      <li>
+        When retrieving classes, populate the teacher with first name, last
+        name, and email address only.
+      </li>
+      <li>
+        User must be <code>admin</code> or <code>teacher</code> to create /
+        update / delete.  All users can read.
+      </li>
+    </ol>
+    <h4>Students</h4>
+    <p class="top">
+      You should define these services for interacting with students in a
+      class:
+    </p>
+    <ul class="end">
+      <li><code>GET /api/rosters/:classid/</code> &mdash; return a list of
+        all students for a particular class</li>
+      <li><code>PUT /api/rosters/:classid/:userid</code> &mdash; add student
+        to class</li>
+      <li><code>DELETE /api/rosters/:classid/:userid</code> &mdash; remove
+        student from class</li>
+    </ul>
+    <p class="top">Rules for student web services</p>
+    <ol class="end">
+      <li>
+        The <code>:classid</code> parameter is the same as in the class web
+        services.
+      </li>
+      <li>
+        The <code>:userid</code> parameter is the same as in the user web
+        services.
+      </li>
+      <li>
+        Students should be populated when returned.
+      </li>
+      <li>
+        None of these requests will contain a body; all the information you
+        need is in the command line.
+      </li>
+      <li>
+        User must be <code>admin</code> or <code>teacher</code> to use
+        these services.
+      </li>
+    </ol>
+    <h4>Assignments</h4>
+    <p class="top">
+      You should define these services for interacting
+      with assignments:
+    </p>
+    <ul class="end">
+      <li><code>GET /api/assignments/:classid/</code> &mdash; return a list of
+        all assignments for a particular class</li>
+      <li>
+        <code>GET /api/assignments/:classid/:assignnum</code> &mdash; get a
+        specific assignment from a class
+      </li>
+      <li><code>POST /api/assignments/:classid/</code> &mdash; create a new
+        assignment for a class</li>
+      <li><code>PUT /api/assignments/:classid/:assignnum</code> &mdash; update a
+        specific assignment</li>
+      <li><code>DELETE /api/assignments/:classid/:assignnum</code> &mdash; delete a
+        specific assignment</li>
+    </ul>
+    <p class="top">Rules for assignment web services:</p>
+    <ol class="end">
+      <li>
+        The <code>:classid</code> parameter is the same as in the class web
+        services.
+      </li>
+      <li>
+        The <code>:assignnum</code> parameter is a number representing the
+        index of the assignment.  However, this index <em>should begin at
+        1</em>, not 0 (so subtract 1 to get the array index).
+      </li>
+      <li>
+        User must be <code>admin</code> or <code>teacher</code> to create /
+        update / delete.  All users can read.
+      </li>
+    </ol>
   </body>
 </html>
