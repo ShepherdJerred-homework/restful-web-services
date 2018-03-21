@@ -108,12 +108,20 @@ export async function updateClass (req: express.Request, res: express.Response, 
   }
 
   try {
-    await classs.save();
+    res.json(await classs.save());
   } catch (err) {
     res.status(500);
     res.json({ message: err });
   }
 }
 
-export function deleteClass (req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function deleteClass (req: express.Request, res: express.Response, next: express.NextFunction) {
+  let classs: model.ClassDocument = res.locals.class;
+  try {
+    classs = await classs.remove();
+    res.json(classs);
+  } catch (err) {
+    res.status(500);
+    res.json({ message: err });
+  }
 }
