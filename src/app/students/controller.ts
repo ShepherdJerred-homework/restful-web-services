@@ -17,12 +17,9 @@ export async function addStudentToClass (req: express.Request, res: express.Resp
   let classs = res.locals.class as classModel.ClassDocument;
   let user = res.locals.user as userModel.UserDocument;
 
-  let students = classs.students as userModel.User[];
-  students.push(user);
-
   try {
-    await classs.populate('students').execPopulate();
-    await classs.save();
+    await classs.update({ $push: { 'students': user._id } });
+    classs = await classModel.ClassModel.findOne({ _id: classs.id }).populate('students') as classModel.ClassDocument;
     res.json(classs.students);
   } catch (err) {
     res.status(500);
@@ -32,10 +29,11 @@ export async function addStudentToClass (req: express.Request, res: express.Resp
 
 export async function removeStudentFromClass (req: express.Request, res: express.Response, next: express.NextFunction) {
   let classs = res.locals.class as classModel.ClassDocument;
+  let user = res.locals.user as userModel.UserDocument;
 
   try {
-    await classs.populate('students').execPopulate();
-    await classs.save();
+    await classs.update({ $pull: { 'students': user._id } });
+    classs = await classModel.ClassModel.findOne({ _id: classs.id }).populate('students') as classModel.ClassDocument;
     res.json(classs.students);
   } catch (err) {
     res.status(500);
