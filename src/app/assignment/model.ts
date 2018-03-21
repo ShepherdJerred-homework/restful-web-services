@@ -35,6 +35,18 @@ let AssignmentSchema: mongoose.Schema = new mongoose.Schema({
       return now.setDate(now.getDate() + 2);
     }
   }
+}, {
+  toJSON: {
+    getters: false,
+    virtuals: false,
+    transform: (doc, obj, options) => {
+      obj.id = obj._id;
+      obj.due = obj.due.toLocaleString();
+      delete obj._id;
+      delete obj.__v;
+      return obj;
+    }
+  }
 });
 
-export let AssignmentModel: mongoose.Model<AssignmentDocument> = mongoose.model<AssignmentDocument>('Class', AssignmentSchema);
+export let AssignmentModel: mongoose.Model<AssignmentDocument> = mongoose.model<AssignmentDocument>('Assignment', AssignmentSchema);

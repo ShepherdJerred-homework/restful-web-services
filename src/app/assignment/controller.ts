@@ -11,7 +11,13 @@ export async function getAssignmentFromParameter (req: express.Request, res: exp
   let assignmentNumber: number = parseInt(assignnum, 10);
   assignment = classs.assignments[assignmentNumber - 1] as model.AssignmentDocument;
 
-  res.locals.assignment = assignment;
+  if (assignment) {
+    res.locals.assignment = assignment;
+    next();
+  } else {
+    res.status(404);
+    res.json({ message: 'Assignment not found' });
+  }
 }
 
 export async function getAssignmentsForClass (req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -36,11 +42,11 @@ export async function addAssignment (req: express.Request, res: express.Response
     class: req.body.class,
     title: req.body.title,
     points: req.body.points,
-    due: new Date(req.body.due)
+    due: req.body.due ? new Date(req.body.due) : undefined
   });
   try {
     assignment = await assignment.save();
-    await classs.update({ _id: classs._id }, { $push: { assignments: assignment } });
+    await classs.update({ $push: { 'assignments': assignment._id } });
     res.json(assignment);
   } catch (err) {
     res.status(500);
@@ -90,7 +96,7 @@ export async function deleteAssignment (req: express.Request, res: express.Respo
   let classs = res.locals.class as classModel.ClassDocument;
   let assignment: model.AssignmentDocument = res.locals.assignment;
   try {
-    assignment = await model.AssignmentModel.deleteOne({ _id: assignment._id });
+    assignment = await assignment.remove();
     await classs.update({ _id: classs._id }, { $pull: { assignments: assignment } });
     res.json(assignment);
   } catch (err) {
